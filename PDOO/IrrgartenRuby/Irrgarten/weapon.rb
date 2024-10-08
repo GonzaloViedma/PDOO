@@ -1,8 +1,6 @@
 # frozen_string_literal: true
 module Irrgarten
   class Weapon
-    attr_accessor :power, :uses
-
     def initialize(power, uses)
       @power = power
       @uses = uses
@@ -17,7 +15,7 @@ module Irrgarten
     end
 
     def to_s()
-      str= "W[" + @power + "," + @uses + "]"
+      str= "W[" + @power.to_s + "," + @uses.to_s + "]"
       return str
     end
 

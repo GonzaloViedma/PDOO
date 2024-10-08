@@ -1,8 +1,6 @@
 # frozen_string_literal: true
 module Irrgarten
   class Shield
-    attr_accessor :protection, :uses
-
     def initialize(protection, uses)
       @protection = protection
       @uses = uses
@@ -17,7 +15,7 @@ module Irrgarten
     end
 
     def to_s()
-      str = "S[" + @protection + "," + @uses + "]"
+      str = "S[" + @protection.to_s + "," + @uses.to_s + "]"
       return str
     end
   end

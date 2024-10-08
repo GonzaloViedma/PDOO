@@ -14,16 +14,13 @@ public class Irrgarten {
      * @param args the command line arguments
      */
     public static void main(String[] args) {
-        /*Weapon w1 = new Weapon(100,50);
+        Weapon w1 = new Weapon(100);
         String info;
         
         info = w1.toString();
-        System.out.println("Caracteristicas del arma:" + info);*/
-        //Directions dir = Directions.DOWN;
-        //System.out.println("La direccion es: " + dir);
-        for (int i = 0; i<10; i++){
-            System.out.println("Inteligencia: " + Dice.usesleft());
+        System.out.println("Caracteristicas del arma:" + info);
+        
+        
         }
     }
-    
-}
+ 

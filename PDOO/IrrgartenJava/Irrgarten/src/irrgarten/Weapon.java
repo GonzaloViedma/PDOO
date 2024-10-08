@@ -12,9 +12,13 @@ public class Weapon {
     private float power;
     private int uses;
     
-    public Weapon(float power, int uses){
+     Weapon(float power, int uses){
         this.power = power;
         this.uses = uses;
+    }
+    
+     Weapon(float power){
+        this (power, (int)power*2);
     }
     
     public float attack(){

@@ -74,6 +74,9 @@ module Irrgarten
     def discardElement (uses_Left)
       return true if uses_Left == 0
       return false if uses_Left == @MAX_USES
+
+      probabylity = 1.0-(uses_Left.to_f/@MAX_USES)
+      return @GENERADOR.rand(0.0..1.0) >= probabylity
     end
   end
 end
