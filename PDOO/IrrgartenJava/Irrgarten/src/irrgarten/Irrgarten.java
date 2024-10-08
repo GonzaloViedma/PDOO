@@ -19,7 +19,11 @@ public class Irrgarten {
         
         info = w1.toString();
         System.out.println("Caracteristicas del arma:" + info);*/
-        
+        //Directions dir = Directions.DOWN;
+        //System.out.println("La direccion es: " + dir);
+        for (int i = 0; i<10; i++){
+            System.out.println("Inteligencia: " + Dice.usesleft());
+        }
     }
     
 }
