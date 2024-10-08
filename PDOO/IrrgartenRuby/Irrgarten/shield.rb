@@ -10,14 +10,14 @@ module Irrgarten
 
     def protect()
       if @uses > 0
-        @uses--
+        @uses -=1
         return @protection
       end
       return 0
     end
 
     def to_s()
-      str = "S[" @protection "," @uses "]"
+      str = "S[" + @protection + "," + @uses + "]"
       return str
     end
   end

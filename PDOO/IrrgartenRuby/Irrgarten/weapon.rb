@@ -10,14 +10,14 @@ module Irrgarten
 
     def attack()
       if @uses > 0
-        @uses--
+        @uses -= 1
         @power
       end
       0
     end
 
     def to_s()
-      str= "W["@power","@usesg"]"
+      str= "W[" + @power + "," + @uses + "]"
       return str
     end
 
