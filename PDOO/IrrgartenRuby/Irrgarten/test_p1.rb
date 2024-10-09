@@ -10,3 +10,5 @@ module Irrgarten
     end
   end
 end
+t =Irrgarten::TestP1.new
+t.main
