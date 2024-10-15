@@ -30,4 +30,8 @@ public class Shield {
         cad = "S[" + this.protection + "," + this.uses + "]";
         return cad;
     }
+    
+    public boolean discard(){
+        return Dice.discardElement(uses);
+    }
 }

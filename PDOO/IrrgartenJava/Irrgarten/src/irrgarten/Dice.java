@@ -77,7 +77,36 @@ public class Dice {
         return attack;
     }
     
-    static public int usesleft(){
+    static public float shieldPower(){
+        float shield = generator.nextFloat()*MAX_ATTACK;
+        
+        while(shield == MAX_SHIELD){
+            shield = generator.nextFloat()*MAX_SHIELD;
+        }
+        return shield;
+    }
+    
+    static public int usesLeft(){
         return Dice.generator.nextInt(Dice.MAX_USES+1);
+    }
+    
+    static public float intensity(float competence){
+        return Dice.generator.nextFloat()*competence;
+    }
+    
+    static public boolean discardElement(int usesLeft){
+        float prob = 1-((float)usesLeft/MAX_USES);
+        
+        if(usesLeft == MAX_USES){
+            return false;
+        }
+        else{
+            if(usesLeft == 0){
+                return true;
+            }
+            else{
+                return prob >= Dice.generator.nextFloat();
+            }
+        }
     }
 }

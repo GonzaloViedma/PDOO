@@ -12,13 +12,9 @@ public class Weapon {
     private float power;
     private int uses;
     
-     Weapon(float power, int uses){
+    public Weapon(float power, int uses){
         this.power = power;
         this.uses = uses;
-    }
-    
-     Weapon(float power){
-        this (power, (int)power*2);
     }
     
     public float attack(){
@@ -29,9 +25,13 @@ public class Weapon {
         return 0;
     }
     
-    public String toString(){
+    public String toString(){  //Funcionaria poniendo solo return??
         String cad;
         cad = "W[" + this.power + "," + this.uses + "]";
         return cad;
+    }
+    
+    public boolean discard(){
+        return Dice.discardElement(uses);
     }
 }
