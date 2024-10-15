@@ -14,21 +14,11 @@ public class Irrgarten {
      * @param args the command line arguments
      */
     public static void main(String[] args) {
-        /*Weapon w1 = new Weapon(100,50);
-        String info;
         
-        info = w1.toString();
-        System.out.println("Caracteristicas del arma:" + info);*/
-        //Directions dir = Directions.DOWN;
-        //System.out.println("La direccion es: " + dir);
-        int descarta=0;
-        for (int i = 0; i<100; i++){
-            boolean discar = Dice.discardElement(4);
-            System.out.println("discard " + i + ": " + discar);
-            if(discar == true)
-                descarta++;
-        }
-        System.out.println(descarta);
+        Player p1 = new Player('1', 4.5f, 3.3f);
+        
+        float suma = p1.sumWeapons();
+       
     }
     
 }
