@@ -41,7 +41,7 @@ module Irrgarten
     end
 
     def number
-      @number
+      @name
     end
 
     def pos(row, col)
@@ -116,7 +116,6 @@ module Irrgarten
       sum = 0.0
       sum += @intelligence
       sum += self.sum_shields
-      return sum
     end
 
     def manage_hit

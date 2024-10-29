@@ -20,8 +20,10 @@ module Irrgarten
 
     def attack
       damage = Dice.intensity(@strength)
-      return damage
     end
+
+    #def defend(received_attack)
+    #end
 
     def pos(row, col)
       @row = row
@@ -30,15 +32,12 @@ module Irrgarten
 
     def to_s
       str = "M[" + @name + "," + @intelligence.to_s + "," + @strength.to_s + "," + @health.to_s + "]"
-      return str
     end
 
+    private
     def got_wounded
       @health -= 1
     end
-
-    #def defend(received_attack)
-    #end
 
   end
 end
