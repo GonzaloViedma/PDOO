@@ -108,7 +108,7 @@ public class Labyrinth {
     }
     
     private boolean combatPos(int row, int col){
-        return this.labyrinth[row][col] == Labyrinth.COMBAR_CHAR;
+        return this.labyrinth[row][col] == Labyrinth.COMBAR_CHAR && this.players[row][col]!= null;
     }
     
     private boolean canStepOn(int row, int col){
@@ -125,9 +125,20 @@ public class Labyrinth {
         }
     }
     
-    //public int[] dir2pos(int row, int col, Directions direction){
+    public int[] dir2pos(int row, int col, Directions direction){
         
-    //}
+        int aux[]={row,col};
+        if(direction == Directions.DOWN)
+            aux[0]=row+1;
+        if(direction == Directions.UP)
+            aux[0]=row-1;
+        if(direction == Directions.LEFT)
+            aux[1]=col-1;
+        if(direction == Directions.RIGHT)
+            aux[1]=col+1;
+        
+        return aux;
+    }
     
     private int [] randomEmptyPos(){
         int col = Dice.randomPos(this.nCols);
