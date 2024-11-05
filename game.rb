@@ -1,5 +1,6 @@
 # frozen_string_literal: true
 require_relative 'player'
+require_relative 'monster'
 require_relative 'dice'
 require_relative 'labyrinth'
 require_relative 'game_state'
@@ -29,7 +30,32 @@ module Irrgarten
     end
 
     def next_step(preferred_direction)
+      @log = ""
+      dead = @player[@current_player_index].dead
+      if !dead
+        direction = self.actual_direction(preferred_direction)
 
+        if direction != preferred_direction
+          self.log_player_no_orders
+        end
+
+        monster = @lab.put_player(direction, @current_player_index)
+
+        if monster == nil
+          self.log_no_monster
+        else
+          winner = self.combat(monster)
+          self.manage_reward(winner)
+        end
+      else
+        self.manage_resurrection
+      end
+
+      end_game = self.finished
+
+      if !end_game
+        self.next_player
+      end
     end
 
     def get_game_state
@@ -56,19 +82,52 @@ module Irrgarten
     end
 
     def actual_direction(preferred_direction)
-
+      current_row = @player[@current_player_index].row
+      current_col = @player[@current_player_index].col
+      valid_moves = @lab.valid_moves(current_row, current_col)
+      output = move(preferred_direction, valid_moves)
     end
 
     def combat(monster)
+      rounds = 0
+      winner = GameCharacter.Player
+      player_attack = @player[@current_player_index].attack
+      lose = defend(player_attack)
 
+      while(!lose && rounds < @@MAX_ROUNDS)
+        winner = GameCharacter.Monster
+        rounds += 1
+        monster_attack = monster.attack
+        lose = @player[@current_player_index].defend(monster_attack)
+
+        if(!lose)
+          player_attack = @player[@current_player_index].attack
+          winner = GameCharacter.Player
+          lose = monster.defend(player_attack)
+        end
+
+      end
+      self.log_rounds(rounds, @@MAX_ROUNDS)
+      winner
     end
 
     def manage_reward(winner)
-
+      if winner == GameCharacter.Player
+        @player[@current_player_index].receive_reward
+        self.log_player_won
+      else
+        self.log_monster_won
+      end
     end
 
     def manage_resurrection
-
+      resurrect = Dice.resurrect_player
+      if resurrect
+        @player[@current_player_index].resurrect
+        self.log_resurrected
+      else
+        self.log_player_skip_turn
+      end
     end
 
     def log_player_won
@@ -79,7 +138,7 @@ module Irrgarten
       @log = @log + ". El monstruo ha ganado el combate. \n"
     end
 
-    def log_Resurrected
+    def log_resurrected
       @log = @log + " ha resucitado. \n"
     end
 

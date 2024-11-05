@@ -2,6 +2,7 @@
 require_relative 'directions'
 require_relative 'orientation'
 require_relative 'dice'
+require_relative 'player'
 module Irrgarten
   class Labyrinth
     @@BLOCK_CHAR = 'X'
@@ -34,7 +35,8 @@ module Irrgarten
     end
 
     def spread_players(players)
-
+      for
+      end
     end
 
     def have_a_winner
@@ -63,11 +65,30 @@ module Irrgarten
     end
 
     def put_player(directions, player)
-
+      old_row = player.row
+      old_col = player.col
+      new_pos = self.dir_2_pos(old_row, old_col, directions)
+      monster = put_player_2D(old_row, old_col, new_pos[0], new_pos[1], player)
     end
 
     def add_block(orientation, start_row, start_col, length)
+      if orientation == Orientation.VERTICAL
+        inc_row = 1
+        inc_col = 0
+      else
+        inc_row = 0
+        inc_col = 1
+      end
 
+      row = start_row
+      col = start_col
+
+      while pos_OK(row, col) && empty_pos(row, col) && length > 0
+        @labyrinth[row][col] = @@BLOCK_CHAR
+        length -=1
+        row += inc_row
+        col += inc_col
+      end
     end
 
     def valid_moves(row, col)
@@ -153,7 +174,32 @@ module Irrgarten
     end
 
     def put_player_2D(old_row, old_col, row, col, player)
+      output = nil
 
+      if can_step_on(row,col)
+        if pos_OK(old_row,old_col)
+          p = @players[old_row][old_col]
+          if p == player
+            update_old_pos(old_row,old_col)
+            @players[old_row][old_col] = nil
+          end
+        end
+
+        monster_pos = self.monster_pos(row,col)
+
+        if monster_pos
+          @labyrinth[row][col] = @@COMBAT_CHAR
+          output = @monsters[row,col]
+        else
+          number = player.number
+          @labyrinth[row][col] = number
+        end
+
+        @labyrinth[row][col] = player
+        player.set_pos(row, col)
+      end
+
+      output
     end
   end
 end
