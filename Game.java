@@ -41,9 +41,32 @@ public class Game {
         return this.labyrinth.haveAWinner();
     }
     
-    //public boolean nexStep(Directions preferredDirection){
+    public boolean nexStep(Directions preferredDirection){
+        this.log = "";
+        boolean dead = this.currentPlayer.dead();
         
-    //}
+        if(!dead){
+            Directions direction = this.actualDirection(preferredDirection);
+            
+            if(direction != preferredDirection)
+                this.logPlayerNoOrders();
+            Monster monster = this.labyrinth.putPLayer(direction, this.currentPlayer);
+            if(monster == null){
+                this.logNoMonster();
+            }else{
+                GameCharacter winner = this.combat(monster);
+                this.manageReward(winner);
+            }
+        }else{
+            this.manageResurrection();
+        }
+        boolean endGame = this.finished();
+        
+        if(!endGame)
+            this.nextPlayer();
+        
+        return endGame;
+    }
     
     public GameState getGameState(){
         GameState g = new GameState(this.labyrinth.toString(), this.players.toString(), this.monsters.toString(), this.currentPlayer.getNumber(), this.finished(), this.log);
@@ -62,21 +85,56 @@ public class Game {
         this.log = this.players.get(this.currentPlayerIndex).getNumber() + " " ;
     }
     
-    //private Directions actualDirection(Directions preferredDirection){
+    private Directions actualDirection(Directions preferredDirection){
+        int currentRow = this.currentPlayer.getRow(); 
+        int currentCol = this.currentPlayer.getCol();
+        ArrayList<Directions> validMoves = this.labyrinth.validMoves(currentRow, currentCol);
         
-    //}
+        return this.currentPlayer.move(preferredDirection, validMoves);
+    }
     
-    //private GameCharacter combat(Monster monster){
+    private GameCharacter combat(Monster monster){
+        this.rounds = 0;
+        GameCharacter winner = GameCharacter.PLAYER;
+        float playerAttack = this.currentPlayer.attack();
+        boolean lose = monster.defend(playerAttack);
         
-    //}
+        while(!lose && this.rounds < MAX_ROUNDS){
+            winner = GameCharacter.MONSTER;
+            this.rounds++;
+            float monsterAttack = monster.attack();
+            lose = this.currentPlayer.defend(monsterAttack);
+            if(!lose){
+                playerAttack = this.currentPlayer.attack();
+                winner = GameCharacter.PLAYER;
+                lose = monster.defend(playerAttack);
+            }
+        }
+        
+        this.logRounds(rounds, MAX_ROUNDS);
+        return winner;
+    }
     
-    //private void manageReward(GameCharacter winner){
+    private void manageReward(GameCharacter winner){
         
-    //}
+        if(winner == GameCharacter.PLAYER){
+            this.currentPlayer.recivedReward();
+            this.logPlayerWon();
+        }else{
+            this.logMonsterWon();
+        }
+    }
     
-    //private void manageResurrection(){
+    private void manageResurrection(){
         
-    //}
+        boolean resurrect = Dice.resurrectPlayer();
+        if(resurrect){
+            this.currentPlayer.resurrect();
+            this.logResurrected();
+        }else{
+            this.logPlayerSkipTurn();
+        }
+    }
     
     private void logPlayerWon(){
         this.log = this.log + " Ha ganado el combate. \n";
