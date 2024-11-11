@@ -14,16 +14,24 @@ module Irrgarten
     end
 
     def dead
-      #podria ponerse solo @health == 0 ???
-      @health == 0 ? true : false
+      @health == 0
     end
 
     def attack
-      damage = Dice.intensity(@strength)
+      Dice.intensity(@strength)
     end
 
-    #def defend(received_attack)
-    #end
+    def defend(received_attack)
+      is_dead = self.dead
+      if !is_dead
+        defensive_energy = Dice.intensity(@intelligence)
+        if defensive_energy < received_attack
+          self.got_wounded
+          is_dead = self.dead
+        end
+      end
+      is_dead
+    end
 
     def pos(row, col)
       @row = row
@@ -31,7 +39,7 @@ module Irrgarten
     end
 
     def to_s
-      str = "M[" + @name + "," + @intelligence.to_s + "," + @strength.to_s + "," + @health.to_s + "]"
+      "M[" + @name + "," + @intelligence.to_s + "," + @strength.to_s + "," + @health.to_s + "]"
     end
 
     private

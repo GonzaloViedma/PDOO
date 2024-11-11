@@ -18,8 +18,7 @@ module Irrgarten
     end
 
     def to_s
-      str = "S[" + @protection.to_s + "," + @uses.to_s + "]"
-      return str
+      "S[" + @protection.to_s + "," + @uses.to_s + "]"
     end
 
     def discard

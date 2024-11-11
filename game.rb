@@ -7,59 +7,66 @@ require_relative 'game_state'
 module Irrgarten
   class Game
     @@MAX_ROUNDS = 10
-    @@N_ROWS = 3
-    @@N_COLS = 6
-    @@EXIT_ROW = 2
-    @@EXIT_COL = 5
+    @@N_ROWS = 8
+    @@N_COLS = 12
+    @@EXIT_ROW = 6
+    @@EXIT_COL = 11
 
     def initialize(n_players)
-
+      @players = []
+      @monsters = []
+      rand = Dice.new()
       for i in 0...n_players
-        @players[i] = Player.new(i, Dice.random_intelligence, Dice.random_strength)
+        @players.push(Player.new(i, rand.random_intelligence, rand.random_strength))
       end
-      @current_player_index = Dice.who_starts(n_players)
-      @log = @players[@current_player_index].number
-      @monsters[]
+      @current_player_index = rand.who_starts(n_players)
+      @log = @current_player_index.to_s
+      @monsters.insert(0, Monster.new("creeper", rand.random_intelligence, rand.random_strength))
+      @monsters.insert(1, Monster.new("enderman", rand.random_intelligence, rand.random_strength))
+      @monsters.insert(2, Monster.new("zombie", rand.random_intelligence, rand.random_strength))
+      @monsters.insert(3, Monster.new("arquero", rand.random_intelligence, rand.random_strength))
+
       @lab = Labyrinth.new(@@N_ROWS, @@N_COLS, @@EXIT_ROW, @@EXIT_COL)
+      configure_labyrinth
       @lab.spread_players(@players)
-      @rounds
+
     end
 
     def finished
-      Labyrinth.have_a_winner
+      @lab.have_a_winner
     end
 
     def next_step(preferred_direction)
       @log = ""
-      dead = @player[@current_player_index].dead
+      dead = @players[@current_player_index].dead
       if !dead
-        direction = self.actual_direction(preferred_direction)
+        direction = actual_direction(preferred_direction)
 
         if direction != preferred_direction
-          self.log_player_no_orders
+          log_player_no_orders
         end
 
-        monster = @lab.put_player(direction, @current_player_index)
+        monster = @lab.put_player(direction, @players[@current_player_index])
 
         if monster == nil
-          self.log_no_monster
+          log_no_monster
         else
-          winner = self.combat(monster)
-          self.manage_reward(winner)
+          winner = combat(monster)
+          manage_reward(winner)
         end
       else
-        self.manage_resurrection
+        manage_resurrection
       end
 
-      end_game = self.finished
+      end_game = finished
 
       if !end_game
-        self.next_player
+        next_player
       end
     end
 
     def get_game_state
-      @game_state = GameState.new(@lab, @players, @monsters, @current_player_index, self.finished, @log)
+      @game_state = GameState.new(@lab, @players, @monsters, @current_player_index, finished, @log)
     end
 
     def mostrar_lab
@@ -69,6 +76,35 @@ module Irrgarten
     private
 
     def configure_labyrinth
+        @lab.add_monster(1,2, @monsters[0])
+        @lab.add_monster(1,8, @monsters[1])
+        @lab.add_monster(4,5, @monsters[2])
+        @lab.add_monster(4,9, @monsters[3])
+        @lab.add_monster(5,2, @monsters[4])
+        @lab.add_block(Orientation::HORIZONTAL, 0, 1,2)
+        @lab.add_block(Orientation::HORIZONTAL, 0, 4,3)
+        @lab.add_block(Orientation::HORIZONTAL, 0, 11,1)
+        @lab.add_block(Orientation::HORIZONTAL, 1, 4,1)
+        @lab.add_block(Orientation::HORIZONTAL, 1, 9,1)
+        @lab.add_block(Orientation::HORIZONTAL, 2, 0,2)
+        @lab.add_block(Orientation::HORIZONTAL, 2, 3,2)
+        @lab.add_block(Orientation::HORIZONTAL, 2, 6,2)
+        @lab.add_block(Orientation::HORIZONTAL, 2, 9,3)
+        @lab.add_block(Orientation::HORIZONTAL, 3, 1,1)
+        @lab.add_block(Orientation::HORIZONTAL, 3, 3,1)
+        @lab.add_block(Orientation::HORIZONTAL, 3, 6,1)
+        @lab.add_block(Orientation::HORIZONTAL, 4, 8,1)
+        @lab.add_block(Orientation::HORIZONTAL, 4, 10,1)
+        @lab.add_block(Orientation::HORIZONTAL, 5, 0,2)
+        @lab.add_block(Orientation::HORIZONTAL, 5, 3,4)
+        @lab.add_block(Orientation::HORIZONTAL, 5, 10,2)
+        @lab.add_block(Orientation::HORIZONTAL, 6, 1,1)
+        @lab.add_block(Orientation::HORIZONTAL, 6, 3,1)
+        @lab.add_block(Orientation::HORIZONTAL, 6, 8,1)
+        @lab.add_block(Orientation::HORIZONTAL, 7, 3,2)
+        @lab.add_block(Orientation::HORIZONTAL, 7, 6,1)
+        @lab.add_block(Orientation::HORIZONTAL, 7, 8,4)
+
 
     end
 
@@ -78,85 +114,85 @@ module Irrgarten
       else
         @current_player_index += 1
       end
-      @log = @players[@current_player_index].number
+      @log = @current_player_index.to_s
     end
 
     def actual_direction(preferred_direction)
-      current_row = @player[@current_player_index].row
-      current_col = @player[@current_player_index].col
+      current_row = @players[@current_player_index].row
+      current_col = @players[@current_player_index].col
       valid_moves = @lab.valid_moves(current_row, current_col)
-      output = move(preferred_direction, valid_moves)
+      output = @players[@current_player_index].move(preferred_direction, valid_moves)
     end
 
     def combat(monster)
       rounds = 0
       winner = GameCharacter.Player
-      player_attack = @player[@current_player_index].attack
+      player_attack = @players[@current_player_index].attack
       lose = defend(player_attack)
 
-      while(!lose && rounds < @@MAX_ROUNDS)
+      while !lose && (rounds < @@MAX_ROUNDS)
         winner = GameCharacter.Monster
         rounds += 1
         monster_attack = monster.attack
-        lose = @player[@current_player_index].defend(monster_attack)
+        lose = @players[@current_player_index].defend(monster_attack)
 
-        if(!lose)
-          player_attack = @player[@current_player_index].attack
+        if !lose
+          player_attack = @players[@current_player_index].attack
           winner = GameCharacter.Player
           lose = monster.defend(player_attack)
         end
 
       end
-      self.log_rounds(rounds, @@MAX_ROUNDS)
+      log_rounds(rounds, @@MAX_ROUNDS)
       winner
     end
 
     def manage_reward(winner)
       if winner == GameCharacter.Player
-        @player[@current_player_index].receive_reward
-        self.log_player_won
+        @players[@current_player_index].receive_reward
+        log_player_won
       else
-        self.log_monster_won
+        log_monster_won
       end
     end
 
     def manage_resurrection
       resurrect = Dice.resurrect_player
       if resurrect
-        @player[@current_player_index].resurrect
-        self.log_resurrected
+        @players[@current_player_index].resurrect
+        log_resurrected
       else
-        self.log_player_skip_turn
+        log_player_skip_turn
       end
     end
 
     def log_player_won
-      @log = @log + " ha ganado el combate. \n"
+      @log += " ha ganado el combate. \n"
     end
 
     def log_monster_won
-      @log = @log + ". El monstruo ha ganado el combate. \n"
+      @log += ". El monstruo ha ganado el combate. \n"
     end
 
     def log_resurrected
-      @log = @log + " ha resucitado. \n"
+      @log += " ha resucitado. \n"
     end
 
     def log_player_skip_turn
-      @log = @log + " ha perdido el turno. Esta muerto. \n"
+      @log += " ha perdido el turno. Esta muerto. \n"
     end
 
     def log_player_no_orders
-      @log = @log + " no ha seguido las instrucciones. \n"
+      @log += " no ha seguido las instrucciones. \n"
     end
 
     def log_no_monster
-      @log = @log + " se ha movido a una celda vacia o no se ha movido. \n"
+      @log += " se ha movido a una celda vacia o no se ha movido. \n"
     end
 
     def log_rounds(rounds, max)
       if rounds > max
-        @log = @log + ". Se han producido más rounds del máximo. \n"
+        @log += ". Se han producido más rounds del máximo. \n"
       end
     end
 

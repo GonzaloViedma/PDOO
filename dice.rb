@@ -14,62 +14,54 @@ module Irrgarten
     @@generator= Random.new
 
     def random_pos (max)
-      pos = @@generator.rand(0...max)
-      return pos
+      @@generator.rand(0...max)
     end
 
     def who_starts (nplayers)
-      starts = @@generator.rand(0...nplayers)
-      return starts
+      @@generator.rand(0...nplayers)
     end
 
     def random_intelligence
-      return @@generator.rand(0.0...@@MAX_INTELLIGENCE)
+      @@generator.rand(0.0...@@MAX_INTELLIGENCE)
     end
 
     def random_strength
-      return @@generator.rand(0.0...@@MAX_STRENGTH)
+      @@generator.rand(0.0...@@MAX_STRENGTH)
     end
 
     def resurrect_player
       prob = @@generator.rand(0.0..1.0)
-      prob > @@RESURRECT_PROB ? false : true
+      prob > @@RESURRECT_PROB
       #return true if prob <= @RESURRECT_PROB
       #return false if prob > @RESURRECT_PROB
     end
 
     def weapon_reward
-      nweapons = @@generator.rand(0..@@WEAPONS_REWARD)
-      return nweapons
+      @@generator.rand(0..@@WEAPONS_REWARD)
     end
 
     def shields_reward
-      nshield = @@generator.rand(0..@@SHIELDS_REWARD)
-      return nshield
+      @@generator.rand(0..@@SHIELDS_REWARD)
     end
 
     def health_reward
-      nhealth = @@generator.rand(0..@@HEALTH_REWARD)
-      return nhealth
+      @@generator.rand(0..@@HEALTH_REWARD)
     end
 
     def weapon_power
-      attack= @@generator.rand(0...@MAX_ATTACK)
-      return attack
+      @@generator.rand(0...@MAX_ATTACK)
     end
 
     def shield_power
-      defense = @@generator.rand(0...@@MAX_SHIELD)
-      return defense
+      @@generator.rand(0...@@MAX_SHIELD)
     end
 
     def uses_left
-      uses = @@generator.rand(0...@@MAX_USES)
-      return uses
+      @@generator.rand(0...@@MAX_USES)
     end
 
     def intensity (competence)
-      return @@generator.rand(0...competence)
+      @@generator.rand(0...competence)
     end
 
     def discard_element (uses_Left)
@@ -78,7 +70,7 @@ module Irrgarten
       return false if uses_Left == @@MAX_USES
 
       probabylity = 1.0-(uses_Left.to_f/@@MAX_USES)
-      return @@generator.rand(0.0..1.0) >= probabylity
+      @@generator.rand(0.0..1.0) >= probabylity
     end
   end
 end
