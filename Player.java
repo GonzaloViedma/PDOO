@@ -70,9 +70,16 @@ public class Player {
         return health == 0;
     }
     
-    //public Directions move(Directiosn direction, Directions[] validMoves){
-        
-    //}
+    public Directions move(Directions direction, ArrayList<Directions> validMoves){
+        /*1.1*/ int size = validMoves.size();
+        /*1.2*/ boolean contained = validMoves.contains(direction);
+        /*alt*/if(size > 0 && (!contained)){
+            /*1.3*/ Directions firstElement = validMoves.get(0);
+            /*1.4*/ return firstElement;
+        }else{
+            /*1.5*/ return direction;
+        }
+    }
     
     public float attack(){
         float sum = 0.0f;
@@ -81,13 +88,27 @@ public class Player {
         return sum;
     }
     
-    //public boolean defend(float receivedAttack){
-        
-    //} 
+    public boolean defend(float receivedAttack){
+        return this.manageHit(receivedAttack);
+    } 
     
-    //public void recivedReward(){
+    public void recivedReward(){
+        int wReward = Dice.weaponsReward();
+        int sReward = Dice.shieldsReward();
         
-    //}
+        for(int i = 0; i < wReward; i++){
+            Weapon wnew = newWeapon();
+            this.receiveWeapon(wnew);
+        }
+        
+        for(int i = 0; i < sReward; i++){
+            Shield snew = newShield();
+            this.receiveShield(snew);
+        }
+        
+        int extraHealth = Dice.healthReward();
+        this.health += extraHealth;
+    }
     
     public String toString(){
         String str;
@@ -95,13 +116,36 @@ public class Player {
         return str;
     }
     
-    //private void receiveWeapon( Weapon w){
+    private void receiveWeapon( Weapon w){
+        for(int i = 0; i < this.weapons.size(); i++){
+            Weapon wi = this.weapons.get(i);
+            boolean discard = wi.discard();
+            
+            if(discard)
+                this.weapons.remove(wi);
+        }
         
-    //}
+        int size = this.weapons.size();
+        
+        if(size < MAX_WEAPON)
+            this.weapons.add(w);
+    }
     
-    //private void receiveShield(Shield s){
+    private void receiveShield(Shield s){
+       
+        for(int i = 0; i < this.shields.size(); i++){
+            Shield si = this.shields.get(i);
+            boolean discard = si.discard();
+            
+            if(discard)
+                this.shields.remove(si);
+        }
         
-    //}
+        int size = this.shields.size();
+        
+        if(size < MAX_SHIELDS)
+            this.shields.add(s);
+    }
     
     private Weapon newWeapon(){
         Weapon w1 = new Weapon (Dice.weaponPower(), Dice.usesLeft());
@@ -140,9 +184,25 @@ public class Player {
          return sum;
      }
      
-     //private boolean manageHit(float receivedAttack){
+     private boolean manageHit(float receivedAttack){
+         float defense = this.defensiveEnergy();
          
-     //}
+         if(defense < receivedAttack){
+             this.gotWounded();
+             this.incConsecutiveHits();
+         }else{
+             this.resetHits();
+         }
+         boolean lose;
+         if(this.consecutiveHits == HITS2LOSE || this.dead()){
+             this.resetHits();
+             lose = true;
+         }else{
+             lose = false;
+         }
+         
+         return lose;
+     }
      
      private void resetHits(){
          this.consecutiveHits = 0;

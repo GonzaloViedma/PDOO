@@ -41,7 +41,7 @@ public class Game {
         return this.labyrinth.haveAWinner();
     }
     
-    public boolean nexStep(Directions preferredDirection){
+    public boolean nextStep(Directions preferredDirection){
         this.log = "";
         boolean dead = this.currentPlayer.dead();
         
@@ -50,7 +50,7 @@ public class Game {
             
             if(direction != preferredDirection)
                 this.logPlayerNoOrders();
-            Monster monster = this.labyrinth.putPLayer(direction, this.currentPlayer);
+            Monster monster = this.labyrinth.putPlayer(direction, this.currentPlayer);
             if(monster == null){
                 this.logNoMonster();
             }else{
@@ -74,6 +74,34 @@ public class Game {
     }
     
     private void configureLabyrinth(){
+        this.labyrinth.addMonster(1, 2, this.monsters.get(0));
+        this.labyrinth.addMonster(1, 8, this.monsters.get(1));
+        this.labyrinth.addMonster(4, 5, this.monsters.get(2));
+        this.labyrinth.addMonster(4, 9, this.monsters.get(3));
+        this.labyrinth.addMonster(5, 2, this.monsters.get(4));
+        this.labyrinth.addBlock(Orientation.HORIZONTAL, 0, 1, 2);
+        this.labyrinth.addBlock(Orientation.HORIZONTAL, 0, 4, 3);
+        this.labyrinth.addBlock(Orientation.HORIZONTAL, 0, 11, 1);
+        this.labyrinth.addBlock(Orientation.HORIZONTAL, 1, 4, 1);
+        this.labyrinth.addBlock(Orientation.HORIZONTAL, 1, 9, 1);
+        this.labyrinth.addBlock(Orientation.HORIZONTAL, 2, 0, 2);
+        this.labyrinth.addBlock(Orientation.HORIZONTAL, 2, 3, 2);
+        this.labyrinth.addBlock(Orientation.HORIZONTAL, 2, 6, 2);
+        this.labyrinth.addBlock(Orientation.HORIZONTAL, 2, 9, 3);
+        this.labyrinth.addBlock(Orientation.HORIZONTAL, 3, 1, 1);
+        this.labyrinth.addBlock(Orientation.HORIZONTAL, 3, 3, 1);
+        this.labyrinth.addBlock(Orientation.HORIZONTAL, 3, 6, 1);
+        this.labyrinth.addBlock(Orientation.HORIZONTAL, 4, 8, 1);
+        this.labyrinth.addBlock(Orientation.HORIZONTAL, 4, 10, 1);
+        this.labyrinth.addBlock(Orientation.HORIZONTAL, 5, 0, 2);
+        this.labyrinth.addBlock(Orientation.HORIZONTAL, 5, 3, 4);
+        this.labyrinth.addBlock(Orientation.HORIZONTAL, 5, 10, 2);
+        this.labyrinth.addBlock(Orientation.HORIZONTAL, 6, 1, 1);
+        this.labyrinth.addBlock(Orientation.HORIZONTAL, 6, 3, 1);
+        this.labyrinth.addBlock(Orientation.HORIZONTAL, 6, 8, 1);
+        this.labyrinth.addBlock(Orientation.HORIZONTAL, 7, 3, 2);
+        this.labyrinth.addBlock(Orientation.HORIZONTAL, 7, 6, 1);
+        this.labyrinth.addBlock(Orientation.HORIZONTAL, 7, 8, 4);
         
     }
     
@@ -165,4 +193,3 @@ public class Game {
     }
     
 }
-

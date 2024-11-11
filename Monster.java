@@ -31,8 +31,18 @@ public class Monster {
         return damage;
     }
     
-    //public boolean defend(float recivedAttack){  
-    //}
+    public boolean defend(float recivedAttack){  
+        boolean isDead = this.dead();
+        
+        if(!isDead){
+            float defensiveEnergy = Dice.intensity(intelligence);
+            if(defensiveEnergy < recivedAttack){
+                this.gotWounded();
+                isDead = this.dead();
+            }
+        }
+        return isDead;
+    }
     
     public void setPos(int row, int col){
         this.row = row;
