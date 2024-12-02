@@ -15,11 +15,19 @@ module Irrgarten
     end
 
     def players
-      @players.to_s
+      cad = ""
+      for p in @players
+        cad += p.to_s
+      end
+      cad
     end
 
     def monsters
-      @monsters.to_s
+      cad = ""
+      for m in @monsters
+        cad += m.to_s
+      end
+      cad
     end
 
     def current_player

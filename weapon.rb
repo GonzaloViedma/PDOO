@@ -22,7 +22,8 @@ module Irrgarten
     end
 
     def discard
-      Dice.discard_element(@power)
+      rand = Dice.new
+      rand.discard_element(@power)
     end
   end
 end

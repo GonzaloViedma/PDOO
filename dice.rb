@@ -31,7 +31,7 @@ module Irrgarten
 
     def resurrect_player
       prob = @@generator.rand(0.0..1.0)
-      prob > @@RESURRECT_PROB
+      prob <= @@RESURRECT_PROB
       #return true if prob <= @RESURRECT_PROB
       #return false if prob > @RESURRECT_PROB
     end
@@ -49,7 +49,7 @@ module Irrgarten
     end
 
     def weapon_power
-      @@generator.rand(0...@MAX_ATTACK)
+      @@generator.rand(0...@@MAX_ATTACK)
     end
 
     def shield_power
@@ -57,20 +57,20 @@ module Irrgarten
     end
 
     def uses_left
-      @@generator.rand(0...@@MAX_USES)
+      @@generator.rand(0..@@MAX_USES)
     end
 
     def intensity (competence)
       @@generator.rand(0...competence)
     end
 
-    def discard_element (uses_Left)
+    def discard_element (uses_left)
 
-      return true if uses_Left == 0
-      return false if uses_Left == @@MAX_USES
+      return true if uses_left == 0
+      return false if uses_left == @@MAX_USES
 
-      probabylity = 1.0-(uses_Left.to_f/@@MAX_USES)
-      @@generator.rand(0.0..1.0) >= probabylity
+      probabylity = 1.0-(uses_left.to_f/@@MAX_USES)
+      @@generator.rand(0.0..1.0) <= probabylity
     end
   end
 end

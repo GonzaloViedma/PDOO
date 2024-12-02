@@ -4,6 +4,7 @@ require_relative 'monster'
 require_relative 'dice'
 require_relative 'labyrinth'
 require_relative 'game_state'
+require_relative "game_character"
 module Irrgarten
   class Game
     @@MAX_ROUNDS = 10
@@ -15,12 +16,13 @@ module Irrgarten
     def initialize(n_players)
       @players = []
       @monsters = []
-      rand = Dice.new()
+      rand = Dice.new
       for i in 0...n_players
         @players.push(Player.new(i, rand.random_intelligence, rand.random_strength))
       end
       @current_player_index = rand.who_starts(n_players)
-      @log = @current_player_index.to_s
+      @current_player = @players[@current_player_index]
+      @log = @current_player.to_s
       @monsters.insert(0, Monster.new("creeper", rand.random_intelligence, rand.random_strength))
       @monsters.insert(1, Monster.new("enderman", rand.random_intelligence, rand.random_strength))
       @monsters.insert(2, Monster.new("zombie", rand.random_intelligence, rand.random_strength))
@@ -37,7 +39,7 @@ module Irrgarten
     end
 
     def next_step(preferred_direction)
-      @log = ""
+      #@log = ""
       dead = @players[@current_player_index].dead
       if !dead
         direction = actual_direction(preferred_direction)
@@ -63,12 +65,15 @@ module Irrgarten
       if !end_game
         next_player
       end
+      end_game
     end
 
-    def get_game_state
-      @game_state = GameState.new(@lab, @players, @monsters, @current_player_index, finished, @log)
+    def game_state
+      game_state = GameState.new(@lab, @players, @monsters, @current_player_index, finished, @log)
     end
 
+
+    #metodo que hice yo para probar a mostrar el laberinto
     def mostrar_lab
       @lab.to_s
     end
@@ -126,19 +131,19 @@ module Irrgarten
 
     def combat(monster)
       rounds = 0
-      winner = GameCharacter.Player
+      winner = GameCharacter::PLAYER
       player_attack = @players[@current_player_index].attack
-      lose = defend(player_attack)
+      lose = monster.defend(player_attack)
 
       while !lose && (rounds < @@MAX_ROUNDS)
-        winner = GameCharacter.Monster
+        winner = GameCharacter::MONSTER
         rounds += 1
         monster_attack = monster.attack
         lose = @players[@current_player_index].defend(monster_attack)
 
         if !lose
           player_attack = @players[@current_player_index].attack
-          winner = GameCharacter.Player
+          winner = GameCharacter::PLAYER
           lose = monster.defend(player_attack)
         end
 
@@ -148,7 +153,7 @@ module Irrgarten
     end
 
     def manage_reward(winner)
-      if winner == GameCharacter.Player
+      if winner == GameCharacter::PLAYER
         @players[@current_player_index].receive_reward
         log_player_won
       else
@@ -157,7 +162,8 @@ module Irrgarten
     end
 
     def manage_resurrection
-      resurrect = Dice.resurrect_player
+      rand = Dice.new
+      resurrect = rand.resurrect_player
       if resurrect
         @players[@current_player_index].resurrect
         log_resurrected
@@ -167,31 +173,45 @@ module Irrgarten
     end
 
     def log_player_won
+      @log = ""
+      @log = @current_player.number.to_s
       @log += " ha ganado el combate. \n"
     end
 
     def log_monster_won
+      @log = ""
+      @log = @current_player.number.to_s
       @log += ". El monstruo ha ganado el combate. \n"
     end
 
     def log_resurrected
+      @log = ""
+      @log = @current_player.number.to_s
       @log += " ha resucitado. \n"
     end
 
     def log_player_skip_turn
+      @log = ""
+      @log = @current_player.number.to_s
       @log += " ha perdido el turno. Esta muerto. \n"
     end
 
     def log_player_no_orders
+      @log = ""
+      @log = @current_player.number.to_s
       @log += " no ha seguido las instrucciones. \n"
     end
 
     def log_no_monster
+      @log = ""
+      @log = @current_player.number.to_s
       @log += " se ha movido a una celda vacia o no se ha movido. \n"
     end
 
     def log_rounds(rounds, max)
       if rounds > max
+        @log = ""
+        @log = @current_player.number.to_s
         @log += ". Se han producido más rounds del máximo. \n"
       end
     end

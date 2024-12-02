@@ -18,16 +18,20 @@ module Irrgarten
     end
 
     def attack
-      Dice.intensity(@strength)
+      rand = Dice.new()
+
+      rand.intensity(@strength)
     end
 
     def defend(received_attack)
-      is_dead = self.dead
+      is_dead = dead
+      rand = Dice.new()
+
       if !is_dead
-        defensive_energy = Dice.intensity(@intelligence)
+        defensive_energy = rand.intensity(@intelligence)
         if defensive_energy < received_attack
-          self.got_wounded
-          is_dead = self.dead
+          got_wounded
+          is_dead = dead
         end
       end
       is_dead
@@ -39,7 +43,7 @@ module Irrgarten
     end
 
     def to_s
-      "M[" + @name + "," + @intelligence.to_s + "," + @strength.to_s + "," + @health.to_s + "]"
+      "M[" + @name + "," + @intelligence.to_s + "," + @strength.to_s + "," + @health.to_s + "] \n"
     end
 
     private

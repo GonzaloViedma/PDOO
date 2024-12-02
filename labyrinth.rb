@@ -3,6 +3,7 @@ require_relative 'directions'
 require_relative 'orientation'
 require_relative 'dice'
 require_relative 'player'
+require_relative 'monster'
 module Irrgarten
   class Labyrinth
     @@BLOCK_CHAR = 'X'
@@ -38,7 +39,7 @@ module Irrgarten
       for player in players
         p = player
         pos = random_empty_pos
-        put_player_2d(-1, -1, pos[0], pos[1], p)
+        put_player_2d(-1, -1, pos[@@ROW], pos[@@COL], p)
       end
     end
 
@@ -61,14 +62,15 @@ module Irrgarten
       if pos_OK(row,col) && empty_pos(row,col)
         @labyrinth[row][col] = @@MONSTER_CHAR
         @monsters[row][col] = monster
+        #monster.pos(row,col)
       end
     end
 
     def put_player(directions, player)
       old_row = player.row
       old_col = player.col
-      new_pos = self.dir_2_pos(old_row, old_col, directions)
-      monster = self.put_player_2d(old_row, old_col, new_pos[0], new_pos[1], player)
+      new_pos = dir_2_pos(old_row, old_col, directions)
+      monster = put_player_2d(old_row, old_col, new_pos[@@ROW], new_pos[@@COL], player)
     end
 
     def add_block(orientation, start_row, start_col, length)
@@ -92,18 +94,18 @@ module Irrgarten
     end
 
     def valid_moves(row, col)
-      output = new.Directions
+      output = []
       if can_step_on(row+1, col)
-        output.add(Directions::DOWN)
+        output << (Directions::DOWN)
       end
       if can_step_on(row-1, col)
-        output.add(Directions::UP)
+        output << (Directions::UP)
       end
       if can_step_on(row, col+1)
-        output.add(Directions::RIGHT)
+        output << (Directions::RIGHT)
       end
       if can_step_on(row, col-1)
-        output.add(Directions::LEFT)
+        output << (Directions::LEFT)
       end
       output
     end
@@ -163,13 +165,13 @@ module Irrgarten
 
       case direction
         when Directions::UP
-          aux[0]=row-1
+          aux[@@ROW]=row-1
         when Directions::DOWN
-          aux[0]=row+1
+          aux[@@ROW]=row+1
         when Directions::LEFT
-          aux[1]=col-1
+          aux[@@COL]=col-1
         when Directions::RIGHT
-          aux[1]=col+1
+          aux[@@COL]=col+1
       end
         aux
     end
@@ -186,7 +188,7 @@ module Irrgarten
           vacia = true
         end
       end
-      return pos
+      pos
     end
 
     def put_player_2d(old_row, old_col, row, col, player)
@@ -201,7 +203,7 @@ module Irrgarten
           end
         end
 
-        monster_pos = monster_pos(old_row,old_col)
+        monster_pos = monster_pos(row, col)
 
         if monster_pos
           @labyrinth[row][col] = @@COMBAT_CHAR
@@ -212,7 +214,7 @@ module Irrgarten
         end
 
         @players[row][col] = player
-        player.pos(old_row, old_col)
+        player.pos(row, col)
       end
 
       output
