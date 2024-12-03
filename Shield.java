@@ -1,30 +1,26 @@
-
+/*
+ * Click nbfs://nbhost/SystemFileSystem/Templates/Licenses/license-default.txt to change this license
+ * Click nbfs://nbhost/SystemFileSystem/Templates/Classes/Class.java to edit this template
+ */
 package irrgarten;
 
-public class Shield {
-    private float protection;
-    private int uses;
+/**
+ *
+ * @author gonzaalovd
+ */
+public class Shield extends CombatElement{
     
     public Shield(float protection, int uses){
-        this.protection = protection;
-        this.uses = uses;
+        super(protection, uses);
     }
     
     public float protect(){
-        if(this.uses > 0){
-            this.uses--;
-            return this.protection;
-        }
-        return 0;
+        return this.produceEffect();
     }
+    
     
     public String toString(){
-        String cad;
-        cad = "S[" + this.protection + "," + this.uses + "]";
-        return cad;
+        return "S" + super.toString();
     }
     
-    public boolean discard(){
-        return Dice.discardElement(uses);
-    }
 }

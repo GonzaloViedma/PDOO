@@ -1,29 +1,37 @@
-
+/*
+ * Click nbfs://nbhost/SystemFileSystem/Templates/Licenses/license-default.txt to change this license
+ * Click nbfs://nbhost/SystemFileSystem/Templates/Classes/Main.java to edit this template
+ */
 package irrgarten;
-
-import java.util.ArrayList;
-
+/**
+ *
+ * @author gonzaalovd & carlitros_gamer20
+ */
 public class Irrgarten {
 
     /**
      * @param args the command line arguments
      */
     public static void main(String[] args) {
+        /*Weapon w1 = new Weapon(100,50);
+        String info;
         
-        //ArrayList<Directions> validMoves = new ArrayList<>();
-        //validMoves.add(Directions.RIGHT);
-        //validMoves.add(Directions.DOWN);
-        //Player p1 = new Player('1', 4.5f, 3.3f);
-        //Directions d = p1.move(Directions.DOWN, validMoves);
+        info = w1.toString();
+        System.out.println("Caracteristicas del arma:" + info);
+        //Directions dir = Directions.DOWN;
+        //System.out.println("La direccion es: " + dir);
         
+        for (int i = 0; i<1000; i++){
+            int n1 = Dice.randomPos(100);
+            int n2 = Dice.randomPos(100);
+            if(n1 == n2){
+                System.out.println("Ha coincidido el numero :" + n1);
+            }
+            System.out.println("Dupla de numeros " + i + ": " + n1 + " y " + n2);
         
-        //Weapon w1 = new Weapon(2.0f,5);
+        Game juego = new Game(10);
+        System.out.println(juego.showLab());*/
         
-        //p1.newWeapon(w1);
-        
-        //float suma = p1.sumWeapons();
-        
-       
-    }
+        }
     
 }

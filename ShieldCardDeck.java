@@ -8,18 +8,14 @@ package irrgarten;
  *
  * @author gonzaalovd
  */
-public class Weapon extends CombatElement{
-    
-    public Weapon(float power, int uses){
-        super(power,uses);
+public class ShieldCardDeck extends CardDeck<Shield> {
+    public ShieldCardDeck(){
+        super();
     }
     
-    
-    public float attack(){
-        return this.produceEffect();
-    }
-    
-    public String toString(){
-        return "W" + super.toString();
+    protected void addCards(){
+        f
+
+        }
     }
 }

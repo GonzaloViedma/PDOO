@@ -1,6 +1,14 @@
+/*
+ * Click nbfs://nbhost/SystemFileSystem/Templates/Licenses/license-default.txt to change this license
+ * Click nbfs://nbhost/SystemFileSystem/Templates/Classes/Class.java to edit this template
+ */
 package irrgarten;
 import java.util.Random;
-
+import java.util.ArrayList;
+/**
+ *
+ * @author gonzaalovd & carlitros_gamer20
+ */
 public class Dice {
     static private final int MAX_USES = 5;
     static private final float MAX_INTELLIGENCE = (float) 10.0; //si da fallo hay que poner (float) o 10.0f
@@ -31,7 +39,7 @@ public class Dice {
         //return intel;
     }
     
-    static public float randomStrenght(){
+    static public float randomStrength(){
         return Dice.generator.nextFloat()*Dice.MAX_STRENGTH;
         //float str = generator.nextFloat()*MAX_STRENGTH;
         //return str;
@@ -100,6 +108,17 @@ public class Dice {
             else{
                 return prob >= Dice.generator.nextFloat();
             }
+        }
+    }
+    
+    static public Directions nextStep(Directions preference, ArrayList<Directions> validMoves, float intelligence){
+        float prob = intelligence/MAX_INTELLIGENCE;
+        
+        if(Dice.generator.nextFloat() <= prob){
+            return preference;
+        }
+        else{
+            return validMoves.get(generator.nextInt(validMoves.size()));
         }
     }
 }
